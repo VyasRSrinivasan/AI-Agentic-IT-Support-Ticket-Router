@@ -19,3 +19,11 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 **Integration Points**: Email/Zendesk/Slack APIs for ticket ingestion
 
 **Human-in-the-Loop**: Escalation mechanism with confidence scoring
+
+## Tech Stack
+
+* LangChain
+* LangGraph
+* ChromaDB/Pinecone
+* FastAPI
+* React dashboard
