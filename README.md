@@ -27,3 +27,8 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 * ChromaDB/Pinecone
 * FastAPI
 * React dashboard
+
+
+## References
+
+Aniket Hingane. “Building an Intelligent Customer Support System with Multi-Agent Architecture.” DEV Community, 28 Dec. 2025, dev.to/exploredataaiml/building-an-intelligent-customer-support-system-with-multi-agent-architecture-236h. 
