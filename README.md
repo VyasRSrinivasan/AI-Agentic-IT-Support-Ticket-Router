@@ -22,11 +22,62 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 
 ## Tech Stack
 
+* Python
 * LangChain
 * LangGraph
 * ChromaDB/Pinecone
 * FastAPI
 * React dashboard
+
+## System Architecture
+
+![alt text](./images/ITSupportSystemsArchitecture.png)
+
+* Ticket
+* Detector
+* Classifier
+* RAG Retrieval 
+* Resolver
+* Verifier
+* Decision
+
+## Project Structure
+```
+.
+├── README.md
+├── agents
+│   ├── classifier.py
+│   ├── detector.py
+│   ├── resolver.py
+│   └── router.py
+├── apps
+├── data
+│   ├── load_raw_csv.py
+│   └── tickets
+│       ├── customer_support_tickets.csv
+│       └── tickets_private.csv
+├── docs
+├── main.py
+├── outputs
+├── rag
+│   ├── chunking.py
+│   ├── embeddings.py
+│   ├── indexKB.py
+│   ├── indexTickets.py
+│   ├── loadKB.py
+│   ├── prompts.py
+│   ├── retrieve.py
+│   ├── utils.py
+│   └── vectorDB.py
+├── schemas
+│   ├── decision.py
+│   ├── evidence.py
+│   ├── resolution.py
+│   ├── ticket.py
+│   └── triage.py
+├── scripts
+└── tests
+```
 
 
 ## References
