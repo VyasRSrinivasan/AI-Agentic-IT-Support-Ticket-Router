@@ -46,10 +46,10 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 .
 ├── README.md
 ├── agents
-│   ├── classifier.py
-│   ├── detector.py
-│   ├── resolver.py
-│   └── router.py
+│   ├── agenticClassifier.py
+│   ├── agenticDetector.py
+│   ├── agenticResolver.py
+│   └── agenticRouter.py
 ├── apps
 ├── data
 │   ├── load_raw_csv.py
@@ -57,6 +57,8 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 │       ├── customer_support_tickets.csv
 │       └── tickets_private.csv
 ├── docs
+├── images
+│   └── ITSupportSystemsArchitecture.png
 ├── main.py
 ├── outputs
 ├── rag
@@ -70,7 +72,9 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 │   ├── utils.py
 │   └── vectorDB.py
 ├── schemas
+│   ├── __init__.py
 │   ├── decision.py
+│   ├── detector.py
 │   ├── evidence.py
 │   ├── resolution.py
 │   ├── ticket.py
