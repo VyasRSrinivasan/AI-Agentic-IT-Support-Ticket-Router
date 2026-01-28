@@ -8,6 +8,12 @@ Customer support teams are overwhelmed with tickets that could be automatically 
 
 Build an AI agent that analyzes incoming support tickets, extracts key information, checks knowledge bases, and either resolves the ticket automatically or routes it to the appropriate specialist with context.
 
+* AUTO_RESOLVE
+
+* ESCALATE
+
+* ASK_CLARIFYING
+
 ## Components
 
 **Ticket Classification**: Use LangChain to classify tickets by urgency, department, and complexity
@@ -20,6 +26,7 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 
 **Human-in-the-Loop**: Escalation mechanism with confidence scoring
 
+
 ## Tech Stack
 
 * Python
@@ -29,29 +36,40 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 * FastAPI
 * React dashboard
 
+
+## Dataset
+
+Tickets are loaded from data/tickets/customer_support_tickets.csv
+
+
 ## System Architecture
 
 ![alt text](./images/ITSupportSystemsArchitecture.png)
 
-* Ticket
-* Detector
-* Classifier
-* RAG Retrieval 
-* Resolver
-* Verifier
-* Decision
+Pipeline: 
+- **Ticket**
+- **Detector**
+- **Classifier**
+- **RAG Retrieval** 
+- **Resolver**
+- **Verifier**
+- **Decision**
 
 ## Project Structure
 ```
 .
 ├── README.md
 ├── agents
+│   ├── __init__.py
 │   ├── agenticClassifier.py
 │   ├── agenticDetector.py
 │   ├── agenticResolver.py
-│   └── agenticRouter.py
+│   ├── agenticRouter.py
+│   └── agenticVerifier.py
 ├── apps
 ├── data
+│   ├── KB
+│   ├── __init__.py
 │   ├── load_raw_csv.py
 │   └── tickets
 │       ├── customer_support_tickets.csv
@@ -61,7 +79,13 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 │   └── ITSupportSystemsArchitecture.png
 ├── main.py
 ├── outputs
+│   ├── chroma_db
+│   │   └── chroma.sqlite3
+│   └── runs
+│       ├── replay_20260128_001329.jsonl
+│       ├── ...
 ├── rag
+│   ├── __init__.py
 │   ├── chunking.py
 │   ├── embeddings.py
 │   ├── indexKB.py
@@ -78,8 +102,12 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 │   ├── evidence.py
 │   ├── resolution.py
 │   ├── ticket.py
-│   └── triage.py
+│   ├── triage.py
+│   └── verifier.py
 ├── scripts
+│   ├── eval_run.py
+│   ├── replay.py
+│   └── seedKB.py
 └── tests
 ```
 
