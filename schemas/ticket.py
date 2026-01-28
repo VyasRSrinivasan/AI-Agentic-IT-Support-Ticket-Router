@@ -50,7 +50,72 @@ class Ticket(BaseModel):
             parts.append(f"Ticket Priority: {self.ticket_priority}".strip())
         return "\n".join(parts).strip()
 
- 
+
+
+    @staticmethod
+    def _clean_str(value) -> str:
+        """
+        Normalize CSV string values safely.
+        """
+        if value is None:
+            return ""
+        return str(value).strip()
+    
+    @staticmethod
+    def _parse_dt(value) -> Optional[datetime]:
+        """
+        Best-effort parsing for common CSV datetime formats.
+        Returns None if parsing fails (so ingestion doesn't crash).
+        """
+        if value is None:
+            return None
+        s = str(value).strip()
+        if not s:
+            return None
+
+        # Try ISO formats first: "2021-03-22" or "2023-06-01T12:15:36"
+        try:
+            return datetime.fromisoformat(s)
+        except Exception:
+            pass
+
+        # Try common timestamp format: "2023-06-01 12:15:36"
+        for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(s, fmt)
+            except Exception:
+                continue
+
+        return None
+
+
+    @staticmethod
+    def _normalize_channel(value) -> str:
+        """
+        Normalize channel strings from the CSV into a consistent set.
+        """
+        if value is None:
+            return "Unknown"
+
+        v = str(value).strip().lower()
+        if not v:
+            return "Unknown"
+
+        if v in {"email", "e-mail"}:
+            return "Email"
+        if v in {"chat", "live chat"}:
+            return "Chat"
+        if v in {"social media", "social", "twitter", "facebook", "instagram"}:
+            return "Social media"
+        if v in {"web", "website", "portal", "form"}:
+            return "Web"
+        if v in {"phone", "call"}:
+            return "Phone"
+
+        return "Unknown"
+
+        
+    @classmethod
     def from_customer_support_csv_row(cls, row: Dict[str, Any]) -> "Ticket":
         """
         Construct a Ticket from a row of customer_support_tickets.csv.
