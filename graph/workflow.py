@@ -18,7 +18,7 @@ def after_route(state):
     d = state["decision"].decision  # Decision is a Pydantic model
     if d == "AUTO_RESOLVE":
         return "resolve"
-    if d == "ASK-CLARIFYING":
+    if d == "ASK_CLARIFYING":
         return END
     # If we are escalating or asking clarifying, go to human review interrupt
     return "human_review"

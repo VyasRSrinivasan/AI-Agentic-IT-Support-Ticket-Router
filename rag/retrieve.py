@@ -8,7 +8,7 @@ from typing import List, Tuple
 from schemas import Ticket, EvidenceChunk, EvidenceBundle
 
 
-KB_DIR = Path("data") / "kb"
+KB_DIR = Path("data") / "KB"
 
 
 def _tokenize(text: str) -> List[str]:
