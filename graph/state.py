@@ -14,11 +14,12 @@ from schemas import (
 
 class GraphState(TypedDict, total=False):
     ticket: Ticket
-
     detector: DetectorOutput
     triage: TriageOutput
     evidence: EvidenceBundle
     resolution: ResolutionDraft
-
     decision: Decision
     verification: VerificationResult
+
+    human_action: Optional[str]
+    human_notes: Optional[str]

@@ -25,6 +25,7 @@ from rag.retrieve import retrieve
 
 from graph.workflow import build_graph
 
+
 def main(limit: int):
     # Output file
     run_dir = Path("outputs") / "runs"

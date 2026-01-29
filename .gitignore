@@ -1,0 +1,18 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Outputs
+outputs/
+
+# Large / private data
+data/tickets/customer_support_tickets.csv
+data/tickets/tickets_private.csv
+
+# If you keep a local copy of Chroma
+chroma_db/
+*.sqlite3
+
+# Env / secrets
+.env
+.env.*

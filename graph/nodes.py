@@ -10,6 +10,43 @@ from agents.agenticResolver import run_resolver
 from agents.agenticVerifier import run_verifier
 from rag.retrieve import retrieve
 
+from langgraph.types import interrupt
+
+def human_review_node(state: GraphState) -> GraphState:
+
+    if state.get("human_action"):
+        return {
+            "human_action": state.get("human_action"),
+            "human_notes": state.get("human_notes", "")
+        }
+    decision = state.get("decision")
+    verification = state.get("verification")
+    triage = state.get("triage")
+    evidence = state.get("evidence")
+    resolution = state.get("resolution")
+
+    top_kb = []
+    if evidence is not None:
+        # EvidenceBundle -> evidence.kb is a list[EvidenceChunk]
+        top_kb = [c.model_dump() for c in evidence.kb[:3]]
+
+    payload = {
+        "message": "Human review required",
+        "decision": decision.model_dump() if decision else None,
+        "verification": verification.model_dump() if verification else None,
+        "triage": triage.model_dump() if triage else None,
+        "top_evidence": top_kb,
+        "draft_response": resolution.model_dump() if resolution else None,
+    }
+
+    human_input = interrupt(payload)
+
+    return {
+        "human_action": human_input.get("human_action"),
+        "human_notes": human_input.get("human_notes", ""),
+    
+    }
+
 
 def detect_node(state: GraphState) -> GraphState:
     ticket = state["ticket"]
