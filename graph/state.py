@@ -23,3 +23,5 @@ class GraphState(TypedDict, total=False):
 
     human_action: Optional[str]
     human_notes: Optional[str]
+
+    escalation_payload: Optional[dict]

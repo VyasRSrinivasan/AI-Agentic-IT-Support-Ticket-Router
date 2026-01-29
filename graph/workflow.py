@@ -15,19 +15,16 @@ from graph.nodes import (
 )
 
 def after_route(state):
-    d = state["decision"].decision  # Decision is a Pydantic model
+    d = state["decision"].decision  
     if d == "AUTO_RESOLVE":
         return "resolve"
     if d == "ASK_CLARIFYING":
         return END
-    # If we are escalating or asking clarifying, go to human review interrupt
     return "human_review"
 
 def after_verify(state: GraphState) -> str:
-    # If verifier says safe, end (auto-resolve complete)
     if state["verification"].is_safe_to_auto_resolve:
         return END
-    # Otherwise require human review (interrupt)
     return "human_review"
 
 '''
