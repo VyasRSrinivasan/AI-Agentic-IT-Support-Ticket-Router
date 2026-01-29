@@ -16,15 +16,15 @@ Build an AI agent that analyzes incoming support tickets, extracts key informati
 
 ## Components
 
-**Ticket Classification**: Use LangChain to classify tickets by urgency, department, and complexity
+**Ticket Classification**: Use LangChain to classify tickets by urgency, department, and complexity (_IN PROGRESS_ - Currently NOT Using LangChain)
 
-**Knowledge Base RAG**: Vector store with company documentation, FAQs, and past ticket resolutions
+**Knowledge Base RAG**: Vector store with company documentation, FAQs, and past ticket resolutions (_IN PROGRESS_ - Currently using baseline, NOT vector store)
 
-**LangGraph Workflow**: Multi-step decision tree that attempts self-resolution before escalation
+**LangGraph Workflow**: Multi-step decision tree that attempts self-resolution before escalation (_COMPLETE_)
 
-**Integration Points**: Email/Zendesk/Slack APIs for ticket ingestion
+**Integration Points**: Email/Zendesk/Slack APIs for ticket ingestion (_PLANNED_)
 
-**Human-in-the-Loop**: Escalation mechanism with confidence scoring
+**Human-in-the-Loop**: Escalation mechanism with confidence scoring (_COMPLETE_)
 
 
 ## Tech Stack
