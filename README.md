@@ -14,6 +14,10 @@ Without automation:
 
 Build an AI agent that analyzes incoming support tickets, extracts key information, checks knowledge bases, and either resolves the ticket automatically or routes it to the appropriate specialist with context.
 
+This system is designed as a decision engine rather than a chatbot.
+Agents _analyze_ the ticket, _propose_ an action, and a verifier enforces safety rules before automation is allowed.  
+Automation only occurs when confidence and grounding conditions are satisfied — otherwise the ticket escalates to a human specialist.
+
 ### Decision
 
 - **AUTO_RESOLVE**: automatically generate a grounded response
@@ -64,10 +68,17 @@ Used solely as input simulation
 - **Ticket**: Normalized structured representation of a support ticket
 - **Detector**: Early safety & completeness analysis
 - **Classifier**: Operational triage of the ticket based on department, urgency, complexity
-- **RAG Retrieval**: Extracts relevant support knowledge and outputs citations
+- **RAG Retrieval**: Retrieves grounded support knowledge and outputs citations. Currently uses a keyword retrieval baseline over KB documents
 - **Resolver**: Curates a response (response text, citation references, confidence score) grounded in retrieved evidence 
-- **Verifier**: Checks security risk, evidence grounding, confidence threshold
+- **Verifier**: Checks security risk, evidence grounding, confidence thresholds. It can override automation since agents propose actions and verifier enforces safety.
 - **Decision**: Final action of either _AUTO RESOLVE_ , _ASK CLARIFYING_ , _ESCALATE_
+
+
+## LangGraph
+
+LangGraph orchestrates the ticket lifecycle as a state machine rather than a linear chain.
+This is crucial since support workflows branch based on risk and confidence level, and it may need human approval.
+
 
 ## Project Structure
 ```
