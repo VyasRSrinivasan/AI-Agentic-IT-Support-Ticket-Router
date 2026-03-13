@@ -21,6 +21,11 @@ with open(path, "r", encoding="utf-8") as f:
             has_citations += 1
 
 print("tickets:", n)
+if n == 0:
+    print("No tickets found in run file.")
+    exit()
+
+
 print("auto_resolve:", auto_resolve, f"({auto_resolve/n:.1%})")
 print("escalate:", escalate, f"({escalate/n:.1%})")
 print("ask_clarifying:", clarify, f"({clarify/n:.1%})")
