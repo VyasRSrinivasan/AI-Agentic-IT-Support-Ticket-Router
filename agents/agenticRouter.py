@@ -3,7 +3,7 @@ from __future__ import annotations
 from schemas import Ticket, DetectorOutput, TriageOutput, Decision
 
 
-AUTO_RESOLVE_CONF_THRESHOLD = 0.78
+AUTO_RESOLVE_CONF_THRESHOLD = 0.65
 RESOLVER_CONF_THRESHOLD = 0.80  # used later if you pass resolver confidence in
 
 def run_router(ticket: Ticket, detector_out: DetectorOutput, triage_out: TriageOutput) -> Decision:

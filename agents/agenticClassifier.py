@@ -11,8 +11,8 @@ DEPT_KEYWORDS = {
     "Security": ["phishing", "suspicious", "hacked", "unauthorized", "compromised", "malware", "different domain"],
 }
 
+
 def _pick_department(text: str, detector_out: DetectorOutput) -> tuple[str, float]:
-    # hard override for security
     if detector_out.security_risk == "High":
         return "Security", 0.9
 
@@ -25,7 +25,6 @@ def _pick_department(text: str, detector_out: DetectorOutput) -> tuple[str, floa
             best_score = score
             best_dept = dept
 
-    # convert keyword hit count into a rough confidence
     confidence = 0.55
     if best_score >= 3:
         confidence = 0.85
@@ -36,38 +35,55 @@ def _pick_department(text: str, detector_out: DetectorOutput) -> tuple[str, floa
 
     return best_dept, confidence
 
-def _infer_urgency(ticket: Ticket, text: str) -> str:
-    # Use raw dataset priority if present
+
+def _infer_urgency(ticket: Ticket, text: str, detector_out: DetectorOutput) -> str:
+    # Security overrides everything
+    if detector_out.security_risk == "High":
+        return "Critical"
+
+    # Start from dataset priority as a hint, not a final answer
+    urgency = "Medium"
     if ticket.ticket_priority:
         p = ticket.ticket_priority.strip().lower()
-        if p in {"critical"}:
-            return "Critical"
-        if p in {"high"}:
-            return "High"
-        if p in {"medium"}:
-            return "Medium"
-        if p in {"low"}:
-            return "Low"
+        if p == "critical":
+            urgency = "High"   # soften by default; reserve Critical for truly severe cases
+        elif p == "high":
+            urgency = "High"
+        elif p == "medium":
+            urgency = "Medium"
+        elif p == "low":
+            urgency = "Low"
 
-    # otherwise infer
+    # Text-based urgency overrides
     if any(w in text for w in ["urgent", "asap", "immediately", "right away"]):
-        return "High"
+        urgency = "High"
+
     if any(w in text for w in ["can't access", "locked out", "not turning on", "data loss"]):
-        return "High"
-    return "Medium"
+        urgency = "High"
+
+    if "data loss" in text:
+        urgency = "Critical"
+
+    return urgency
+
 
 def _infer_complexity(text: str) -> str:
-    if any(w in text for w in ["data loss", "crash", "intermittent", "after update", "network", "won't start"]):
+    # Truly complex / high-effort cases
+    if any(w in text for w in ["data loss", "crash", "intermittent"]):
         return "Complex"
-    if any(w in text for w in ["login", "reset", "refund", "charge", "setup", "install"]):
+
+    # Moderate: common support cases with some troubleshooting needed
+    if any(w in text for w in ["after update", "network", "won't start", "not turning on", "login", "reset", "refund", "charge", "setup", "install"]):
         return "Moderate"
+
     return "Simple"
+
 
 def run_classifier(ticket: Ticket, detector_out: DetectorOutput) -> TriageOutput:
     text = ticket.text_for_llm().lower()
 
     dept, dept_conf = _pick_department(text, detector_out)
-    urgency = _infer_urgency(ticket, text)
+    urgency = _infer_urgency(ticket, text, detector_out)
     complexity = _infer_complexity(text)
 
     summary = []
@@ -79,17 +95,22 @@ def run_classifier(ticket: Ticket, detector_out: DetectorOutput) -> TriageOutput
     if detector_out.missing_info:
         summary.append("Ticket may be missing key details; clarification may be needed.")
 
-    # overall confidence: department confidence adjusted down if missing info
     confidence = dept_conf
+
+    # lower confidence if info is missing
     if detector_out.missing_info:
         confidence = max(0.35, confidence - 0.2)
 
+    # slightly lower confidence for complex cases
+    if complexity == "Complex":
+        confidence = max(0.40, confidence - 0.10)
+
     return TriageOutput(
         department=dept,
-        urgency=urgency,            # "Low|Medium|High|Critical"
-        complexity=complexity,      # "Simple|Moderate|Complex"
+        urgency=urgency,
+        complexity=complexity,
         confidence=confidence,
         summary=summary[:5],
         entities=[],
-        sentiment=None
+        sentiment=None,
     )
