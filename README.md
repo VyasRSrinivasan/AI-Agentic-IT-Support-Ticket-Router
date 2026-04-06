@@ -1,91 +1,139 @@
 # Agentic IT Support Ticket Router
 
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+An intelligent AI-powered system for automating customer support ticket routing and resolution using multi-agent architecture and retrieval-augmented generation (RAG).
+
+## Table of Contents
+
+- [Problem](#problem)
+- [Objective](#objective)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Pipeline Overview](#pipeline-overview)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Dataset](#dataset)
+- [Metrics](#metrics)
+- [Project Structure](#project-structure)
+- [Future Enhancements](#future-enhancements)
+- [References](#references)
+
+
 ## Problem
 
 Customer support teams are overwhelmed with tickets that could be automatically resolved or properly routed, leading to slow response times and poor customer satisfaction.
 
 Without automation:
-- urgent issues are lost 
-- humans route tickets manually
-- simple tickets take up expensive support time
-- unsafe automation risks customer satisfaction
+- Urgent issues are lost in the queue
+- Humans manually route tickets, wasting time
+- Simple tickets consume expensive support resources
+- Unsafe automation risks damaging customer satisfaction
 
 ## Objective
 
 Build an AI agent that analyzes incoming support tickets, extracts key information, checks knowledge bases, and either resolves the ticket automatically or routes it to the appropriate specialist with context.
 
-This system is designed as a decision engine rather than a chatbot.
-Agents _analyze_ the ticket, _propose_ an action, and a verifier _enforces_ safety rules before automation is allowed.  
-Automation only occurs when confidence and grounding conditions are satisfied — otherwise the ticket escalates to a human specialist.
+This system is designed as a **decision engine** rather than a chatbot. Agents *analyze* the ticket, *propose* an action, and a verifier *enforces* safety rules before automation is allowed. Automation only occurs when confidence and grounding conditions are satisfied—otherwise, the ticket escalates to a human specialist.
 
-### Decision
+### Decision Types
 
-- **AUTO_RESOLVE**: automatically generate a grounded response
+- **AUTO_RESOLVE**: Automatically generate a grounded response
+- **ESCALATE**: Route to a human specialist
+- **ASK_CLARIFYING**: Request more/missing information from the user
 
-- **ESCALATE**: route to a human specialist
+## Key Features
 
-- **ASK_CLARIFYING**: ask for more/missing information from the user
-
-## Components
-
-**Ticket Classification**: Use LangChain to classify tickets by urgency, department, and complexity (_Currently NOT Using LangChain_)
-
-**Knowledge Base RAG**: Vector store with company documentation, FAQs, and past ticket resolutions (_Currently using baseline, NOT vector store_)
-
-**LangGraph Workflow**: Multi-step decision tree that attempts self-resolution before escalation 
-
-**Integration Points**: Email/Zendesk/Slack APIs for ticket ingestion (_Currently NOT using this_)
-
-**Human-in-the-Loop**: Escalation mechanism with confidence scoring
-
+- **Multi-Agent Architecture**: Specialized agents for detection, classification, routing, resolution, and verification
+- **Safety-First Design**: Built-in verification to prevent unsafe automation
+- **Retrieval-Augmented Generation (RAG)**: Grounded responses using knowledge base retrieval
+- **Human-in-the-Loop**: Escalation and clarification mechanisms for complex cases
+- **Modular Pipeline**: Easily extensible with new agents or integrations
 
 ## Tech Stack
 
-* Python
-* LangChain
-* LangGraph
-* ChromaDB/Pinecone
-* FastAPI
-* React dashboard
+- **Python** 3.8+
+- **LangChain** & **LangGraph** for agent orchestration
+- **ChromaDB** / **Pinecone** for vector storage
+- **FastAPI** for API endpoints
+- **Pydantic** for data validation
+- **Docker** for containerization
 
 
 ## Dataset
 
-Customer support dataset:
+Customer support dataset used for simulation and testing:
 
 ```
 data/tickets/customer_support_tickets.csv
 ```
 
-Used solely as input simulation for replay & testing.
-It is NOT intended as an actual production support dataset.
+**Note**: This dataset is used solely for input simulation, replay, and testing. It is **not** intended as an actual production support dataset.
 
 ## System Architecture
 
-![alt text](./images/ITSupportSystemsArchitecture.png)
+![System Architecture](./images/ITSupportSystemsArchitecture.png)
 
-### Pipeline
+## Pipeline Overview
 
-- **Ticket**: Normalized structured representation of a support ticket
-- **Detector**: Early safety & completeness analysis
-- **Classifier**: Operational triage of the ticket based on department, urgency, complexity
-- **RAG Retrieval**: Retrieves grounded support knowledge and outputs citations. Currently uses a keyword retrieval baseline over KB documents
-- **Resolver**: Curates a response (response text, citation references, confidence score) grounded in retrieved evidence 
-- **Verifier**: Checks security risk, evidence grounding, confidence thresholds. It can override automation since agents propose actions and verifier enforces safety.
-- **Decision**: Final operational action: _AUTO_RESOLVE_, _ASK_CLARIFYING_, or _ESCALATE_, based on triage, evidence, and verifier approval
+The system processes tickets through a sequential pipeline:
 
+1. **Ticket Normalization**: Standardizes incoming ticket data
+2. **Detector**: Performs early safety and completeness checks
+3. **Classifier**: Triages tickets by department, urgency, and complexity
+4. **RAG Retrieval**: Retrieves relevant knowledge base evidence
+5. **Resolver**: Generates a grounded response draft
+6. **Verifier**: Validates safety and grounding before automation
+7. **Decision**: Final action (auto-resolve, escalate, or clarify)
 
-## LangGraph
+LangGraph orchestrates this as a state machine, allowing branching based on risk and confidence levels, with human approval when needed.
 
-LangGraph orchestrates the ticket lifecycle as a state machine rather than a linear chain.
-This is crucial since support workflows branch based on risk and confidence level, and it may need human approval.
+## Installation
 
-## Planned Upgrades
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/agentic-it-support-ticket-router.git
+   cd agentic-it-support-ticket-router
+   ```
 
-- LangChain for ticket classification
-- RAG-based vector store
-- Ticket ingestion using Email APIs, Slack, Zendesk
-- Fast API layer along with dashboard
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **(Optional) Set up vector database**:
+   - For ChromaDB: No additional setup required
+   - For Pinecone: Configure API keys and connection
+
+## Usage
+
+### Replay Tickets (Batch Processing)
+Run the system on sample tickets:
+```bash
+python scripts/replay.py --n 10
+```
+
+### Interactive Workflow (Human-in-the-Loop)
+Start the main workflow:
+```bash
+python main.py
+```
+
+### API Server
+Launch the FastAPI server:
+```bash
+uvicorn apps.api:app --reload --host 0.0.0.0 --port 8000
+```
+Access the API docs at `http://localhost:8000/docs`.
+
+## Future Enhancements
+
+- Integrate LangChain for advanced ticket classification
+- Implement full RAG with vector-based knowledge retrieval
+- Add ticket ingestion from Email, Slack, and Zendesk APIs
+- Develop a React dashboard for monitoring and management
 
 ## Project Structure
 ```
@@ -158,35 +206,7 @@ This is crucial since support workflows branch based on risk and confidence leve
 └── tests
 ```
 
-## How To Run
-
-Replay ticket:
-```
-python scripts/replay.py --n 10
-```
-
-Human-In-The-Loop workflow:
-```
-python main.py
-```
-## Metrics
-
-Evaluation on a 10-ticket replay run:
-
-- **AUTO_RESOLVE**: 70%
-- **ESCALATE**: 30%
-- **ASK_CLARIFYING**: 0%
-- **Verifier Safe**: 70%
-- **Grounded Responses (citations present)**: 100%
-
-These metrics are reflection of the following:
-- rule-based classification
-- keyword-based KB retrieval
-- verifier-based safety gating
-- LangGraph orchestration
-
 ## References
 
-- Aniket Hingane. “Building an Intelligent Customer Support System with Multi-Agent Architecture.” DEV Community, 28 Dec. 2025, dev.to/exploredataaiml/building-an-intelligent-customer-support-system-with-multi-agent-architecture-236h. 
-
-- https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
+- [Building an Intelligent Customer Support System with Multi-Agent Architecture](https://dev.to/exploredataaiml/building-an-intelligent-customer-support-system-with-multi-agent-architecture-236h) by Aniket Hingane
+- [Customer Support Ticket Dataset](https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset) on Kaggle
