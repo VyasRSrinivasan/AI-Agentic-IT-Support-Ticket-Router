@@ -13,6 +13,7 @@ An intelligent AI-powered system for automating customer support ticket routing 
 - [Tech Stack](#tech-stack)
 - [System Architecture](#system-architecture)
 - [Pipeline Overview](#pipeline-overview)
+- [Quick Start for Beginners](#quick-start-for-beginners)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Dataset](#dataset)
@@ -90,6 +91,25 @@ The system processes tickets through a sequential pipeline:
 
 LangGraph orchestrates this as a state machine, allowing branching based on risk and confidence levels, with human approval when needed.
 
+## Quick Start for Beginners
+
+If you are new to this project, use the Streamlit interface first. It provides a simple browser page for entering a ticket and seeing the results without any code changes.
+
+Steps:
+
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Run the Streamlit app:
+   ```bash
+   streamlit run streamlit_app.py
+   ```
+3. Open the local URL shown in your terminal.
+4. Enter a ticket subject and body, then click **Route Ticket**.
+
+You will see the pipeline output, including triage details, decision recommendations, and the full model response in JSON.
+
 ## Installation
 
 1. **Clone the repository**:
@@ -120,6 +140,13 @@ Start the main workflow:
 ```bash
 python main.py
 ```
+
+### Streamlit UI
+Start the Streamlit interface:
+```bash
+streamlit run streamlit_app.py
+```
+Open the app in your browser when Streamlit reports the local URL.
 
 ### API Server
 Launch the FastAPI server:
