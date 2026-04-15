@@ -103,7 +103,7 @@ Steps:
    ```
 2. Run the Streamlit app:
    ```bash
-   streamlit run streamlit_app.py
+   streamlit run app.py
    ```
 3. Open the local URL shown in your terminal.
 4. Enter a ticket subject and body, then click **Route Ticket**.
@@ -232,6 +232,11 @@ Access the API docs at `http://localhost:8000/docs`.
 │   └── seedKB.py
 └── tests
 ```
+
+## Streamlit App
+
+Run the app: 
+https://vyasrsrinivasan-ai-agentic-it-support-ticket-router-app-kstom4.streamlit.app/
 
 ## References
 
