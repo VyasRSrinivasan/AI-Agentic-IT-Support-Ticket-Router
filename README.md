@@ -237,7 +237,7 @@ Access the API docs at `http://localhost:8000/docs`.
 ## Streamlit App
 
 Run the app: 
-https://vyasrsrinivasan-ai-agentic-it-support-ticket-router-app-kstom4.streamlit.app/
+[Agentic IT Customer Support Router](https://vyasrsrinivasan-ai-agentic-it-support-ticket-router-app-kstom4.streamlit.app/)
 
 ## References
 
